@@ -1,0 +1,10 @@
+merge_queue:
+  max_parallel_checks: 1
+
+queue_rules:
+  - name: native-files-old-path
+    batch_size: 1
+    queue_conditions:
+      - -files ~= ^critical/
+    merge_conditions:
+      - label = h1lab-never-merge
