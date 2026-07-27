@@ -14,5 +14,4 @@ scopes:
       critical:
         include:
           - critical/**
-  merge_queue_scope: ""
-
+  merge_queue_scope: merge-queue
