@@ -1,0 +1,13 @@
+pull_request_rules:
+  - name: h1 deleted-fork existing-fork control
+    conditions:
+      - closed
+      - title = h1lab deleted-fork existing-fork control
+    actions:
+      delete_head_branch:
+  - name: h1 deleted-fork null-head target
+    conditions:
+      - closed
+      - title = h1lab deleted-fork null-head target
+    actions:
+      delete_head_branch:
