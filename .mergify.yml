@@ -6,7 +6,7 @@ queue_rules:
     batch_size: 1
     queue_conditions: []
     merge_conditions:
-      - check-success = h1lab-scope-hold
+      - check-success = ci-gate
 
 scopes:
   source:
