@@ -12,8 +12,8 @@ jobs:
     name: h1lab-detect-scopes
     runs-on: ubuntu-24.04
     outputs:
-      protected-source: ${{ fromJSON(steps.detect.outputs.scopes).protected-source }}
-      merge-queue: ${{ fromJSON(steps.detect.outputs.scopes).merge-queue }}
+      protected-source: ${{ fromJSON(steps.detect.outputs.scopes)['protected-source'] }}
+      merge-queue: ${{ fromJSON(steps.detect.outputs.scopes)['merge-queue'] }}
     steps:
       - uses: actions/checkout@v5
         with:
