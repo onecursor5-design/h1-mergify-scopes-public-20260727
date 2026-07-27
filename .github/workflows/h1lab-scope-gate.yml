@@ -1,0 +1,69 @@
+name: h1lab-scope-provenance
+
+on:
+  pull_request_target:
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  scopes:
+    name: h1lab-detect-scopes
+    runs-on: ubuntu-24.04
+    outputs:
+      critical: ${{ fromJSON(steps.detect.outputs.scopes).critical }}
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+
+      - name: Materialize the protected base configuration
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        run: git show "$BASE_SHA:.mergify.yml" > "$RUNNER_TEMP/h1lab-base-mergify.yml"
+
+      - name: Detect scopes with the official Mergify action
+        id: detect
+        uses: Mergifyio/gha-mergify-ci@f16859b8b4496abe98768bed352d5d9c969a2793
+        with:
+          action: scopes
+          base: ${{ github.event.pull_request.base.sha }}
+          head: ${{ github.event.pull_request.head.sha }}
+          mergify_config_path: ${{ runner.temp }}/h1lab-base-mergify.yml
+
+  critical-validation:
+    name: h1lab-critical-validation
+    needs: scopes
+    if: ${{ needs.scopes.outputs.critical == 'true' }}
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Reject changes to the protected guard
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
+          PULL_REQUEST: ${{ github.event.pull_request.number }}
+        run: |
+          gh api "repos/$REPOSITORY/pulls/$PULL_REQUEST/files" --paginate \
+            | jq -e '
+                any(.[];
+                  .filename == "critical/guard.txt"
+                  or .previous_filename == "critical/guard.txt"
+                )
+                | not
+              '
+
+  ci-gate:
+    name: ci-gate
+    if: ${{ !cancelled() }}
+    needs:
+      - scopes
+      - critical-validation
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Aggregate all scope-conditioned jobs
+        uses: Mergifyio/gha-mergify-ci@f16859b8b4496abe98768bed352d5d9c969a2793
+        with:
+          action: wait-jobs
+          jobs: ${{ toJSON(needs) }}
