@@ -1,0 +1,16 @@
+scopes:
+  source:
+    files:
+      protected-source:
+        include:
+          - protected/**/*
+
+pull_request_rules:
+  - name: h1lab-pr-body-scope-protected-merge
+    conditions:
+      - base = main
+      - check-success = ci-gate
+      - "#approved-reviews-by >= 1"
+    actions:
+      merge:
+        method: squash
