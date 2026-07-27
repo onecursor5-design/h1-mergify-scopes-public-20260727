@@ -1,1 +1,1 @@
-<testsuite name="h1lab-fork-read-trace" tests="1" failures="0"><testcase classname="h1lab.fork" name="h1lab_fork_read_trace_20260728_a7c9e2" time="0.001"/></testsuite>
+<testsuite name="h1lab-fork-read-trace" tests="1" failures="0"><testcase classname="h1lab.fork" name="h1lab_fork_read_trace_20260728_a7c9e2" time="0.002"/></testsuite>
