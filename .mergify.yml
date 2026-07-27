@@ -1,8 +1,0 @@
-pull_request_rules:
-  - name: native-files-old-path-no-review-merge
-    conditions:
-      - base = main
-      - -files ~= ^critical/
-    actions:
-      merge:
-        method: squash
