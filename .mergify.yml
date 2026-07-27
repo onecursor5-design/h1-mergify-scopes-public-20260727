@@ -1,0 +1,11 @@
+merge_queue:
+  max_parallel_checks: 1
+  queue_controls_comment: false
+
+queue_rules:
+  - name: edited-command-inert
+    batch_size: 1
+    queue_conditions:
+      - base = main
+    merge_conditions:
+      - label = h1lab-never-merge-edited-command
