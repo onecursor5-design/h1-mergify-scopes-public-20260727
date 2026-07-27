@@ -1,9 +1,8 @@
 pull_request_rules:
-  - name: native-files-old-path-protected-merge
+  - name: native-files-old-path-no-review-merge
     conditions:
       - base = main
       - -files ~= ^critical/
-      - "#approved-reviews-by >= 1"
     actions:
       merge:
         method: squash
