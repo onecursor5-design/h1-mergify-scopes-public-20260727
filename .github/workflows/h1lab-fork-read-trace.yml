@@ -25,6 +25,7 @@ jobs:
           mergify_cli_version: 2026.7.21.1
 
       - name: Upload with the read-only pull-request token
+        id: upload
         env:
           GITHUB_TOKEN: ${{ github.token }}
           MERGIFY_TEST_JOB_NAME: h1lab-fork-read-token-job
@@ -36,3 +37,10 @@ jobs:
           --test-framework h1lab
           --test-language javascript
           h1lab-fork-trace.xml
+
+      - name: Require an accepted Mergify upload
+        env:
+          UPLOAD_STATUS: ${{ steps.upload.outputs.test_results_upload }}
+        run: |
+          echo "h1lab Mergify upload status: $UPLOAD_STATUS"
+          test "$UPLOAD_STATUS" = success
