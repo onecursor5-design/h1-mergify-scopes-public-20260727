@@ -1,10 +1,9 @@
-merge_queue:
-  max_parallel_checks: 1
-
-queue_rules:
-  - name: native-files-old-path
-    batch_size: 1
-    queue_conditions:
+pull_request_rules:
+  - name: native-files-old-path-protected-merge
+    conditions:
+      - base = main
       - -files ~= ^critical/
-    merge_conditions:
-      - label = h1lab-never-merge
+      - "#approved-reviews-by >= 1"
+    actions:
+      merge:
+        method: squash
