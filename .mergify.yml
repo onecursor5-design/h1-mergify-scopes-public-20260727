@@ -1,0 +1,19 @@
+merge_queue:
+  max_parallel_checks: 1
+
+queue_rules:
+  - name: staging-only
+    batch_size: 1
+    queue_conditions:
+      - base = h1lab-retarget-staging
+    merge_conditions:
+      - label = h1lab-never-merge
+
+  - name: main-deny
+    batch_size: 1
+    queue_conditions:
+      - base = main
+      - label = h1lab-main-admit
+    merge_conditions:
+      - label = h1lab-never-merge
+
