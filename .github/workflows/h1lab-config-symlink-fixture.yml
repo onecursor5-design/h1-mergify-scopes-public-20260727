@@ -1,0 +1,60 @@
+name: h1lab config symlink fixture
+
+on:
+  push:
+    paths:
+      - .github/workflows/h1lab-config-symlink-fixture.yml
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: Exact owned fixture transition
+        required: true
+        default: convert
+        type: choice
+        options:
+          - convert
+          - cleanup
+
+permissions:
+  contents: write
+
+jobs:
+  fixture:
+    if: github.repository == 'onecursor5-design/h1-mergify-scopes-public-20260727'
+    runs-on: ubuntu-latest
+    env:
+      MODE: ${{ github.event_name == 'workflow_dispatch' && inputs.mode || 'bootstrap' }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Apply exact owned fixture transition
+        shell: bash
+        run: |
+          set -eu
+          set +x
+          git config user.name 'h1lab-owned-fixture'
+          git config user.email 'h1lab-owned-fixture@users.noreply.github.com'
+          if [ "$MODE" = bootstrap ]; then
+            mkdir -p docs
+            printf '%b' 'pull_request_rules:\n  - name: h1lab docs-only configuration-change guard\n    conditions:\n      - base = main\n      - files ~= ^docs/\n      - -mergify-configuration-changed\n    actions:\n      merge:\n        method: squash\n' > .mergify.yml
+            cp .mergify.yml docs/automation.yml
+            printf '%s\n' 'h1lab docs baseline' > docs/control.txt
+          elif [ "$MODE" = convert ]; then
+            test -f .mergify.yml
+            test ! -L .mergify.yml
+            cmp .mergify.yml docs/automation.yml
+            rm .mergify.yml
+            ln -s docs/automation.yml .mergify.yml
+          elif [ "$MODE" = cleanup ]; then
+            rm -f .mergify.yml docs/automation.yml docs/control.txt
+            rmdir docs 2>/dev/null || true
+          else
+            exit 64
+          fi
+          git add -A .mergify.yml docs
+          if git diff --cached --quiet; then
+            exit 0
+          fi
+          git commit -m "h1lab config symlink fixture: $MODE"
+          git push origin HEAD:main
