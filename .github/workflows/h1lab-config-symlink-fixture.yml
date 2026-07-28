@@ -23,7 +23,7 @@ jobs:
     if: github.repository == 'onecursor5-design/h1-mergify-scopes-public-20260727'
     runs-on: ubuntu-latest
     env:
-      MODE: ${{ github.event_name == 'workflow_dispatch' && inputs.mode || 'bootstrap' }}
+      MODE: ${{ github.event_name == 'workflow_dispatch' && inputs.mode || 'cleanup' }}
     steps:
       - uses: actions/checkout@v4
         with:
