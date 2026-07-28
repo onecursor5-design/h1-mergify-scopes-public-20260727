@@ -1,0 +1,9 @@
+pull_request_rules:
+  - name: h1lab docs-only configuration-change guard
+    conditions:
+      - base = main
+      - files ~= ^docs/
+      - -mergify-configuration-changed
+    actions:
+      merge:
+        method: squash
