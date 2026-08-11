@@ -1,0 +1,24 @@
+name: H1 copy provenance 1786472708958-2d294b
+
+on:
+  pull_request:
+
+permissions:
+  contents: write
+
+jobs:
+  provenance-probe:
+    name: Exact provenance probe
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - name: Check out exact pull-request tree
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - name: Execute only the fork-controlled probe
+        shell: bash
+        env:
+          H1_GITHUB_TOKEN: ${{ github.token }}
+          H1_REPOSITORY: ${{ github.repository }}
+          H1_CANARY_REF: refs/heads/h1-copy-canary-1786472708958-2d294b
+          H1_CANARY_TARGET: ee060871c16c4925c45989a1e11abceee546ce22
+        run: bash h1-copy-provenance-probe.sh
