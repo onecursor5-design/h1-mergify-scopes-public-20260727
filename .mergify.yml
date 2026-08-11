@@ -1,0 +1,12 @@
+pull_request_rules:
+  - name: h1 automatic fork copy 1786473008349-435973
+    conditions:
+      - base = main
+      - -closed
+      - from-fork
+      - title = H1 COPY TRIGGER 1786473008349-435973
+    actions:
+      copy:
+        branches:
+          - h1-copy-target-1786473008349-435973
+        title: H1 COPY TRIGGER 1786473008349-435973
