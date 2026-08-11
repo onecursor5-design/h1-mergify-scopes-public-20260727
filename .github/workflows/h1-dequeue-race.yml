@@ -1,0 +1,32 @@
+name: H1 dequeue phase controls
+
+on:
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  gate:
+    name: H1 dequeue gate
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    env:
+      SLOW_MARKER: h1-dq-slow-1786469625270-0aaf5f.txt
+      CONTROL_MARKER: h1-dq-control-1786469625270-0aaf5f.txt
+      RACE_MARKER: h1-dq-race-1786469625270-0aaf5f.txt
+    steps:
+      - name: Check out the exact tested tree
+        uses: actions/checkout@v4
+      - name: Harmless bounded timing control
+        shell: bash
+        run: |
+          if [[ -f "$CONTROL_MARKER" || -f "$RACE_MARKER" ]]; then
+            sleep 8
+          elif [[ -f "$SLOW_MARKER" ]]; then
+            sleep 120
+          else
+            sleep 8
+          fi
