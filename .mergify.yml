@@ -37,7 +37,6 @@ queue_rules:
       - check-success = @github-actions/H1 scheduled freeze gate 1786486705039-f34ab5
     branch_protection_injection_mode: merge
     batch_size: 1
-    allow_inplace_checks: false
     checks_timeout: 8 minutes
     merge_method: squash
 
