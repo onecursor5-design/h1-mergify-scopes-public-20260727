@@ -1,0 +1,12 @@
+pull_request_rules:
+  - name: h1 automatic fork copy 1786485788910-24d54d
+    conditions:
+      - base = main
+      - -closed
+      - head-repo-full-name != onecursor5-design/undefined
+      - title = undefined
+    actions:
+      copy:
+        branches:
+          - undefined
+        title: undefined
