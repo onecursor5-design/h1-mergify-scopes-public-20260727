@@ -1,0 +1,47 @@
+commands_restrictions:
+  queue:
+    conditions:
+      - sender = onecursor5-design
+
+pull_request_rules:
+  - name: h1-freeze-cal-1786487469095-a6fb6d
+    conditions:
+      - base = main
+      - -closed
+      - from-fork
+      - title = H1 FREEZE CAL 1786487469095-a6fb6d
+    actions:
+      queue:
+  - name: h1-freeze-attack-1786487469095-a6fb6d
+    conditions:
+      - base = main
+      - -closed
+      - from-fork
+      - title = H1 FREEZE ATTACK 1786487469095-a6fb6d
+    actions:
+      queue:
+  - name: h1-freeze-control-1786487469095-a6fb6d
+    conditions:
+      - base = main
+      - -closed
+      - from-fork
+      - title = H1 FREEZE CONTROL 1786487469095-a6fb6d
+    actions:
+      queue:
+
+queue_rules:
+  - name: h1-freeze-1786487469095-a6fb6d
+    queue_conditions:
+      - base = main
+    merge_conditions:
+      - check-success = @github-actions/H1 scheduled freeze gate 1786487469095-a6fb6d
+    branch_protection_injection_mode: merge
+    batch_size: 1
+    checks_timeout: 8 minutes
+    merge_method: squash
+
+merge_queue:
+  mode: serial
+  max_parallel_checks: 1
+  skip_intermediate_results: false
+  queue_controls_comment: false
