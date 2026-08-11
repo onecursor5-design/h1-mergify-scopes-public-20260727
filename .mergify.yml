@@ -1,0 +1,33 @@
+pull_request_rules:
+  - name: H1 fresh dismiss 1786479942491-aec40d
+    conditions:
+      - base = main
+      - "title = H1 fresh dismiss 1786479942491-aec40d"
+      - "#commits = 2"
+      - "#approved-reviews-by >= 1"
+    actions:
+      dismiss_reviews:
+        approved: true
+        changes_requested: false
+        when: synchronize
+
+  - name: H1 same-cycle dismiss 1786479942491-aec40d
+    conditions:
+      - base = main
+      - "title = H1 same-cycle dismiss 1786479942491-aec40d"
+      - "#commits = 2"
+      - "#approved-reviews-by >= 1"
+    actions:
+      dismiss_reviews:
+        approved: true
+        changes_requested: false
+        when: synchronize
+
+  - name: H1 common B-to-C merge 1786479942491-aec40d
+    conditions:
+      - base = main
+      - "label = h1-dismiss-merge-1786479942491-aec40d"
+      - "#commits = 2"
+    actions:
+      merge:
+        method: merge
